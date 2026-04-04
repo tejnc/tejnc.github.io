@@ -5,557 +5,709 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invento &mdash; Inventory Desk</title>
-    <meta name="description"
-        content="Offline-first inventory management desktop app. Manage products, orders, warehouses, and reports &mdash; without needing an internet connection.">
+    <meta name="description" content="Offline-first inventory management desktop app. Manage products, orders, warehouses, and reports.">
     <meta property="og:title" content="Invento &mdash; Inventory Desk">
     <meta property="og:description" content="Offline-first desktop inventory management for small teams.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tejnc.github.io/invento">
     <link rel="canonical" href="https://tejnc.github.io/invento">
     <style>
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --accent: #f5c6a0;
-            --bg: #0d0d0d;
-            --bg-card: #161616;
-            --border: #222;
-            --text: #e0e0e0;
-            --text-muted: #666;
-            --text-dim: #999;
+            --win-bg:       #f3f3f3;
+            --win-surface:  #ffffff;
+            --win-sidebar:  #fafafa;
+            --win-border:   #e0e0e0;
+            --win-border2:  #c8c8c8;
+            --win-accent:   #0078d4;
+            --win-accent-l: #cce4f6;
+            --win-title:    #202020;
+            --win-text:     #1a1a1a;
+            --win-muted:    #6b6b6b;
+            --win-dim:      #9e9e9e;
+            --win-success:  #107c10;
+            --win-shadow:   0 1px 4px rgba(0,0,0,0.1);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: linear-gradient(155deg, #0f3460 0%, #16213e 55%, #0a1628 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 2rem 1rem 3rem;
+        }
+
+        /* ── WINDOW ── */
+        .window {
+            width: 100%;
+            max-width: 1080px;
+            background: var(--win-bg);
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 780px;
+        }
+
+        /* ── TITLE BAR ── */
+        .titlebar {
+            background: var(--win-title);
+            height: 40px;
+            padding: 0 16px 0 12px;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .tb-app {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .tb-icon { font-size: 15px; }
+
+        .tb-title {
+            font-size: 12px;
+            color: #c8c8c8;
+            font-weight: 400;
+        }
+
+        .tb-controls {
+            display: flex;
+        }
+
+        .tb-btn {
+            width: 46px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #c8c8c8;
+            background: transparent;
+            border: none;
+            cursor: default;
+            transition: background 0.1s;
+        }
+
+        .tb-btn:hover          { background: rgba(255,255,255,0.1); }
+        .tb-btn.tb-close:hover { background: #c42b1c; color: #fff; }
+
+        /* ── MENU BAR ── */
+        .menubar {
+            background: var(--win-surface);
+            border-bottom: 1px solid var(--win-border);
+            height: 32px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .mb-item {
+            font-size: 12px;
+            color: var(--win-text);
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: default;
+            transition: background 0.1s;
+        }
+
+        .mb-item:hover { background: var(--win-border); }
+
+        /* ── BODY ── */
+        .win-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 220px;
+            background: var(--win-sidebar);
+            border-right: 1px solid var(--win-border);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 6px 0;
+            overflow-y: auto;
+        }
+
+        .sb-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--win-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 10px 16px 4px;
+        }
+
+        .sb-item {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 6px 12px;
+            margin: 1px 6px;
+            font-size: 13px;
+            color: var(--win-text);
+            cursor: default;
+            border-radius: 5px;
+            transition: background 0.1s;
+            position: relative;
+        }
+
+        .sb-item:hover { background: rgba(0,0,0,0.05); }
+
+        .sb-item.active {
+            background: var(--win-accent-l);
+            color: var(--win-accent);
+            font-weight: 600;
+        }
+
+        .sb-item.active::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 18px;
+            background: var(--win-accent);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .sb-ico {
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sb-divider {
+            height: 1px;
+            background: var(--win-border);
+            margin: 6px 12px;
+        }
+
+        /* ── MAIN ── */
+        .main {
+            flex: 1;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
 
-        main {
-            flex: 1;
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 5rem 2rem 4rem;
-            width: 100%;
+        /* command bar */
+        .cmdbar {
+            background: var(--win-surface);
+            border-bottom: 1px solid var(--win-border);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
         }
 
-        /* ── BACK LINK ── */
-        .back-link {
+        .cmd-title { font-size: 20px; font-weight: 600; color: var(--win-text); }
+
+        .cmd-sub {
+            font-size: 11px;
+            color: var(--win-muted);
+            margin-top: 2px;
+        }
+
+        .cmd-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-bottom: 3rem;
-            transition: color 0.2s;
-        }
-
-        .back-link:hover {
-            color: var(--accent);
-        }
-
-        /* ── HEADER ── */
-        .header {
-            margin-bottom: 3.5rem;
-        }
-
-        .app-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.75rem;
+            gap: 6px;
+            font-size: 11px;
             font-weight: 600;
-            color: var(--text-muted);
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 0.3rem 0.75rem;
-            border-radius: 6px;
-            letter-spacing: 0.04em;
-            margin-bottom: 1.25rem;
+            color: var(--win-success);
+            background: #dff6dd;
+            border: 1px solid #a8d5a8;
+            padding: 4px 10px;
+            border-radius: 4px;
         }
 
-        .dot {
+        .cmd-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--win-success);
+            border-radius: 50%;
+        }
+
+        /* content body */
+        .content {
+            padding: 18px 20px 28px;
+            flex: 1;
+        }
+
+        /* ── WIN SECTION ── */
+        .ws {
+            margin-bottom: 22px;
+        }
+
+        .ws-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--win-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 10px;
+        }
+
+        /* ── FEATURE CARDS ── */
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 8px;
+        }
+
+        .feat-card {
+            background: var(--win-surface);
+            border: 1px solid var(--win-border);
+            border-radius: 8px;
+            padding: 13px 15px;
+            box-shadow: var(--win-shadow);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .feat-card:hover {
+            border-color: var(--win-accent);
+            box-shadow: 0 2px 10px rgba(0,120,212,0.14);
+        }
+
+        .feat-head {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 5px;
+        }
+
+        .feat-ico  { font-size: 18px; flex-shrink: 0; }
+
+        .feat-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--win-text);
+        }
+
+        .feat-desc {
+            font-size: 11.5px;
+            color: var(--win-muted);
+            line-height: 1.55;
+        }
+
+        /* ── INFO PANEL ── */
+        .info-panel {
+            background: var(--win-surface);
+            border: 1px solid var(--win-border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--win-shadow);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 11px 15px;
+            border-bottom: 1px solid var(--win-border);
+            font-size: 13px;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-ico {
+            width: 28px;
+            height: 28px;
+            background: var(--win-accent-l);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--win-text);
+            margin-bottom: 2px;
+            font-size: 13px;
+        }
+
+        .info-text {
+            color: var(--win-muted);
+            line-height: 1.5;
+            font-size: 12px;
+        }
+
+        code {
+            font-size: 11px;
+            background: var(--win-border);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        /* ── ROLES TABLE ── */
+        .win-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            background: var(--win-surface);
+            border: 1px solid var(--win-border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--win-shadow);
+        }
+
+        .win-table thead { background: var(--win-bg); }
+
+        .win-table th {
+            text-align: left;
+            padding: 8px 14px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--win-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            border-bottom: 1px solid var(--win-border);
+        }
+
+        .win-table td {
+            padding: 8px 14px;
+            color: var(--win-text);
+            border-bottom: 1px solid var(--win-border);
+        }
+
+        .win-table tr:last-child td { border-bottom: none; }
+        .win-table tr:hover td     { background: var(--win-accent-l); }
+        .win-table td:first-child  { font-weight: 600; color: var(--win-accent); }
+
+        .chk { color: var(--win-success); font-weight: 700; }
+        .dsh { color: var(--win-border2); }
+
+        /* ── CHIP LIST ── */
+        .chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .win-chip {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--win-muted);
+            background: var(--win-surface);
+            border: 1px solid var(--win-border);
+            border-radius: 4px;
+            padding: 4px 10px;
+            box-shadow: var(--win-shadow);
+        }
+
+        /* ── STATUS BAR ── */
+        .statusbar {
+            background: var(--win-accent);
+            color: rgba(255,255,255,0.92);
+            height: 26px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .sb-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .sb-conn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sb-conn-dot {
             width: 6px;
             height: 6px;
             background: #4ade80;
             border-radius: 50%;
-            flex-shrink: 0;
         }
 
-        .name {
-            font-size: clamp(2rem, 6vw, 3rem);
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            line-height: 1.1;
-            margin-bottom: 0.75rem;
-            color: #fff;
-        }
-
-        .name span {
-            color: var(--accent);
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .tag {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-dim);
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 0.3rem 0.75rem;
-            border-radius: 6px;
-            letter-spacing: 0.02em;
-        }
-
-        .bio {
-            font-size: 1rem;
-            color: var(--text-dim);
-            line-height: 1.75;
-            max-width: 560px;
-        }
-
-        /* ── SECTION LABEL ── */
-        .section-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 1rem;
-        }
-
-        /* ── FEATURE GRID ── */
-        .features {
-            margin-bottom: 3.5rem;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 0.85rem;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.35rem 1.4rem;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        .feature-card:hover {
-            border-color: rgba(245, 198, 160, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .feature-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-icon {
-            font-size: 1.3rem;
-            flex-shrink: 0;
-        }
-
-        .feature-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .feature-desc {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            line-height: 1.65;
-        }
-
-        /* ── HOW IT WORKS ── */
-        .highlights {
-            margin-bottom: 3.5rem;
-        }
-
-        .highlight-list {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .highlight-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.85rem;
-            padding: 0.9rem 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
-
-        .highlight-item:last-child {
-            border-bottom: none;
-        }
-
-        .highlight-item strong {
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        .highlight-bullet {
-            color: var(--accent);
-            font-size: 0.7rem;
-            margin-top: 0.35rem;
-            flex-shrink: 0;
-        }
-
-        code {
-            font-size: 0.82em;
-            color: var(--accent);
-            background: rgba(245, 198, 160, 0.08);
-            padding: 0.1em 0.4em;
-            border-radius: 4px;
-        }
-
-        /* ── ROLES TABLE ── */
-        .roles {
-            margin-bottom: 3.5rem;
-        }
-
-        .role-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-
-        .role-table th {
-            text-align: left;
-            padding: 0.6rem 0.85rem;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .role-table td {
-            padding: 0.7rem 0.85rem;
-            color: var(--text-dim);
-            border-bottom: 1px solid rgba(34, 34, 34, 0.6);
-        }
-
-        .role-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .role-table td:first-child {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .check { color: #4ade80; }
-        .dash  { color: var(--border); }
-
-        /* ── TECH STACK ── */
-        .stack {
-            margin-bottom: 3.5rem;
-        }
-
-        .chip-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .chip {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-            padding: 0.3rem 0.75rem;
-            border-radius: 6px;
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem 3rem;
-            width: 100%;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        footer a {
-            color: var(--text-muted);
+        .statusbar a {
+            color: rgba(255,255,255,0.7);
             text-decoration: none;
-            transition: color 0.2s;
+            font-size: 11px;
         }
 
-        footer a:hover {
-            color: var(--accent);
+        .statusbar a:hover { color: #fff; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 720px) {
+            body { padding: 0; }
+            .window { border-radius: 0; min-height: 100vh; }
+            .sidebar { display: none; }
+            .feat-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        @media (max-width: 480px) {
-            main {
-                padding: 3.5rem 1.25rem 3rem;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            footer {
-                padding: 1.5rem 1.25rem 3rem;
-            }
+        @media (max-width: 460px) {
+            .feat-grid { grid-template-columns: 1fr; }
+            .content { padding: 14px 14px 24px; }
         }
     </style>
 </head>
 
 <body>
+<div class="window">
 
-    <main>
-
-        <!-- BACK -->
-        <a href="https://tejnc.github.io" class="back-link">
-            &larr; tejnc.github.io
-        </a>
-
-        <!-- HEADER -->
-        <div class="header">
-            <div class="app-badge">
-                <span class="dot"></span>
-                v1.1.2 &nbsp;&middot;&nbsp; Desktop App
-            </div>
-            <h1 class="name">Invento &mdash;<br><span>Inventory Desk</span></h1>
-            <div class="tags">
-                <span class="tag">Electron</span>
-                <span class="tag">Offline-first</span>
-                <span class="tag">SQLite</span>
-                <span class="tag">Supabase Sync</span>
-                <span class="tag">Multi-warehouse</span>
-            </div>
-            <p class="bio">
-                A desktop inventory management app built for small teams. Manage products, orders, suppliers,
-                and warehouses &mdash; all stored locally so it works without an internet connection, with automatic
-                background sync to the cloud when you're online.
-            </p>
+    <!-- TITLE BAR -->
+    <div class="titlebar">
+        <div class="tb-app">
+            <span class="tb-icon">&#128230;</span>
+            <span class="tb-title">Invento &mdash; Inventory Desk</span>
         </div>
-
-        <!-- FEATURES -->
-        <div class="features">
-            <div class="section-label">Features</div>
-            <div class="feature-grid">
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#128230;</span>
-                        <span class="feature-title">Products</span>
-                    </div>
-                    <p class="feature-desc">Add products with images, SKUs, categories, unit pricing, and stock levels. Quickly search and filter your entire catalogue.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#127981;</span>
-                        <span class="feature-title">Multi-Warehouse</span>
-                    </div>
-                    <p class="feature-desc">Track inventory across multiple locations. View per-warehouse stock levels and transfer stock between sites.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#128203;</span>
-                        <span class="feature-title">Purchase Orders</span>
-                    </div>
-                    <p class="feature-desc">Create purchase orders, receive goods from suppliers, and track delivery status at every stage.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#128666;</span>
-                        <span class="feature-title">Sales Orders</span>
-                    </div>
-                    <p class="feature-desc">Create and ship sales orders. Auto-generate PDF invoices with embedded QR codes for each order.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#128101;</span>
-                        <span class="feature-title">Suppliers &amp; Customers</span>
-                    </div>
-                    <p class="feature-desc">Manage full contact details for suppliers and customers with dedicated detail panels and order history.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#128202;</span>
-                        <span class="feature-title">Reports</span>
-                    </div>
-                    <p class="feature-desc">Inventory value, movement history, and dead stock reports. Export any report to PDF or Excel in one click.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#128276;</span>
-                        <span class="feature-title">Stock Alerts</span>
-                    </div>
-                    <p class="feature-desc">Automatic low-stock and out-of-stock notifications so you never miss a reorder point.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#128196;</span>
-                        <span class="feature-title">Audit Trail</span>
-                    </div>
-                    <p class="feature-desc">Every stock movement &mdash; receipts, shipments, transfers, and adjustments &mdash; is logged with a full history.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#10066;</span>
-                        <span class="feature-title">Barcode &amp; QR Codes</span>
-                    </div>
-                    <p class="feature-desc">Generate and download barcodes and QR codes for any product. Print-ready for shelving and shipping labels.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#9729;</span>
-                        <span class="feature-title">Cloud Sync</span>
-                    </div>
-                    <p class="feature-desc">Writes go to local SQLite instantly. A background engine syncs changes to Supabase within 30 seconds when online.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <span class="feature-icon">&#128274;</span>
-                        <span class="feature-title">Role-Based Access</span>
-                    </div>
-                    <p class="feature-desc">Four roles &mdash; Admin, Manager, Staff, and Viewer &mdash; with fine-grained permissions on create, edit, delete, and user management.</p>
-                </div>
-
-            </div>
+        <div class="tb-controls">
+            <button class="tb-btn" title="Minimize">&#8722;</button>
+            <button class="tb-btn" title="Maximize">&#9633;</button>
+            <button class="tb-btn tb-close" title="Close">&#10005;</button>
         </div>
+    </div>
 
-        <!-- HOW IT WORKS -->
-        <div class="highlights">
-            <div class="section-label">How it works</div>
-            <div class="highlight-list">
-                <div class="highlight-item">
-                    <span class="highlight-bullet">&#9670;</span>
-                    <span><strong>Offline-first writes.</strong> Every action writes to a local SQLite database first &mdash; the UI responds instantly with no waiting on network calls.</span>
+    <!-- MENU BAR -->
+    <div class="menubar">
+        <span class="mb-item">File</span>
+        <span class="mb-item">View</span>
+        <span class="mb-item">Reports</span>
+        <span class="mb-item">Help</span>
+    </div>
+
+    <!-- BODY -->
+    <div class="win-body">
+
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="sb-label">Main</div>
+            <div class="sb-item active"><span class="sb-ico">&#9646;</span> Overview</div>
+            <div class="sb-item"><span class="sb-ico">&#128230;</span> Products</div>
+            <div class="sb-item"><span class="sb-ico">&#127981;</span> Warehouses</div>
+            <div class="sb-item"><span class="sb-ico">&#128203;</span> Purchase Orders</div>
+            <div class="sb-item"><span class="sb-ico">&#128666;</span> Sales Orders</div>
+            <div class="sb-item"><span class="sb-ico">&#128101;</span> Contacts</div>
+            <div class="sb-divider"></div>
+            <div class="sb-label">Insights</div>
+            <div class="sb-item"><span class="sb-ico">&#128202;</span> Reports</div>
+            <div class="sb-item"><span class="sb-ico">&#128276;</span> Alerts</div>
+            <div class="sb-item"><span class="sb-ico">&#128196;</span> Movements</div>
+            <div class="sb-divider"></div>
+            <div class="sb-item"><span class="sb-ico">&#9881;</span> Settings</div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <div class="cmdbar">
+                <div>
+                    <div class="cmd-title">Overview</div>
+                    <div class="cmd-sub">Invento v1.1.2 &nbsp;&middot;&nbsp; Offline-first inventory management</div>
                 </div>
-                <div class="highlight-item">
-                    <span class="highlight-bullet">&#9670;</span>
-                    <span><strong>Background sync.</strong> A sync engine queues changes and pushes them to Supabase (Postgres) in the background, typically within 30 seconds of coming online.</span>
-                </div>
-                <div class="highlight-item">
-                    <span class="highlight-bullet">&#9670;</span>
-                    <span><strong>Conflict resolution.</strong> On pull, remote state wins for any row not in the local sync queue &mdash; ensuring consistency across devices without data loss.</span>
-                </div>
-                <div class="highlight-item">
-                    <span class="highlight-bullet">&#9670;</span>
-                    <span><strong>Local images.</strong> Product images are stored in <code>userData/product-images/</code> and served via a custom <code>local-image://</code> protocol &mdash; no external hosting needed.</span>
+                <div class="cmd-badge">
+                    <span class="cmd-dot"></span>
+                    Connected
                 </div>
             </div>
-        </div>
 
-        <!-- ROLES -->
-        <div class="roles">
-            <div class="section-label">Access Roles</div>
-            <table class="role-table">
-                <thead>
-                    <tr>
-                        <th>Role</th>
-                        <th>Create</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                        <th>Manage Users</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Admin</td>
-                        <td><span class="check">&#10003;</span></td>
-                        <td><span class="check">&#10003;</span></td>
-                        <td><span class="check">&#10003;</span></td>
-                        <td><span class="check">&#10003;</span></td>
-                    </tr>
-                    <tr>
-                        <td>Manager</td>
-                        <td><span class="check">&#10003;</span></td>
-                        <td><span class="check">&#10003;</span></td>
-                        <td><span class="dash">&mdash;</span></td>
-                        <td><span class="dash">&mdash;</span></td>
-                    </tr>
-                    <tr>
-                        <td>Staff</td>
-                        <td><span class="check">&#10003;</span></td>
-                        <td><span class="check">&#10003;</span></td>
-                        <td><span class="dash">&mdash;</span></td>
-                        <td><span class="dash">&mdash;</span></td>
-                    </tr>
-                    <tr>
-                        <td>Viewer</td>
-                        <td><span class="dash">&mdash;</span></td>
-                        <td><span class="dash">&mdash;</span></td>
-                        <td><span class="dash">&mdash;</span></td>
-                        <td><span class="dash">&mdash;</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="content">
 
-        <!-- TECH STACK -->
-        <div class="stack">
-            <div class="section-label">Built with</div>
-            <div class="chip-list">
-                <span class="chip">Electron</span>
-                <span class="chip">React 18</span>
-                <span class="chip">TypeScript</span>
-                <span class="chip">SQLite</span>
-                <span class="chip">Supabase</span>
-                <span class="chip">Tailwind CSS</span>
-                <span class="chip">Zustand</span>
-                <span class="chip">Recharts</span>
-                <span class="chip">jsPDF</span>
-                <span class="chip">jsBarcode</span>
-                <span class="chip">electron-vite</span>
+                <!-- FEATURES -->
+                <div class="ws">
+                    <div class="ws-title">Features</div>
+                    <div class="feat-grid">
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#128230;</span><span class="feat-name">Products</span></div>
+                            <p class="feat-desc">Images, SKUs, categories, pricing, and stock levels with search and filtering.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#127981;</span><span class="feat-name">Multi-Warehouse</span></div>
+                            <p class="feat-desc">Track and transfer stock across multiple locations and warehouses.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#128203;</span><span class="feat-name">Purchase Orders</span></div>
+                            <p class="feat-desc">Create POs, receive goods, and track supplier deliveries end-to-end.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#128666;</span><span class="feat-name">Sales Orders</span></div>
+                            <p class="feat-desc">Create and ship SOs. Auto-generate PDF invoices with embedded QR codes.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#128101;</span><span class="feat-name">Contacts</span></div>
+                            <p class="feat-desc">Full contact management for suppliers and customers with order history.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#128202;</span><span class="feat-name">Reports</span></div>
+                            <p class="feat-desc">Inventory value, movement history, dead stock. Export to PDF or Excel.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#128276;</span><span class="feat-name">Stock Alerts</span></div>
+                            <p class="feat-desc">Automatic low-stock and out-of-stock notifications.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#128196;</span><span class="feat-name">Audit Trail</span></div>
+                            <p class="feat-desc">Every movement logged &mdash; receipts, shipments, transfers, adjustments.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#10066;</span><span class="feat-name">Barcode &amp; QR</span></div>
+                            <p class="feat-desc">Generate and download barcodes or QR codes for any product.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#9729;</span><span class="feat-name">Cloud Sync</span></div>
+                            <p class="feat-desc">Writes to local SQLite instantly. Syncs to Supabase in the background.</p>
+                        </div>
+
+                        <div class="feat-card">
+                            <div class="feat-head"><span class="feat-ico">&#128274;</span><span class="feat-name">Role-Based Access</span></div>
+                            <p class="feat-desc">Admin, Manager, Staff, and Viewer roles with fine-grained permissions.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ARCHITECTURE -->
+                <div class="ws">
+                    <div class="ws-title">Architecture</div>
+                    <div class="info-panel">
+                        <div class="info-row">
+                            <div class="info-ico">&#9889;</div>
+                            <div>
+                                <div class="info-label">Offline-first writes</div>
+                                <div class="info-text">Every action writes to local SQLite first &mdash; the UI responds instantly with no network latency.</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-ico">&#9729;</div>
+                            <div>
+                                <div class="info-label">Background sync</div>
+                                <div class="info-text">Changes are queued and pushed to Supabase (Postgres) in the background, typically within 30 seconds of coming online.</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-ico">&#9874;</div>
+                            <div>
+                                <div class="info-label">Conflict resolution</div>
+                                <div class="info-text">On pull, remote state wins for rows not in the local sync queue &mdash; ensures consistency without data loss.</div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-ico">&#128247;</div>
+                            <div>
+                                <div class="info-label">Local image protocol</div>
+                                <div class="info-text">Images stored in <code>userData/product-images/</code> and served via a custom <code>local-image://</code> protocol &mdash; no external hosting needed.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACCESS CONTROL -->
+                <div class="ws">
+                    <div class="ws-title">Access Control</div>
+                    <table class="win-table">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Create</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th>Manage Users</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Admin</td>
+                                <td><span class="chk">&#10003;</span></td>
+                                <td><span class="chk">&#10003;</span></td>
+                                <td><span class="chk">&#10003;</span></td>
+                                <td><span class="chk">&#10003;</span></td>
+                            </tr>
+                            <tr>
+                                <td>Manager</td>
+                                <td><span class="chk">&#10003;</span></td>
+                                <td><span class="chk">&#10003;</span></td>
+                                <td><span class="dsh">&mdash;</span></td>
+                                <td><span class="dsh">&mdash;</span></td>
+                            </tr>
+                            <tr>
+                                <td>Staff</td>
+                                <td><span class="chk">&#10003;</span></td>
+                                <td><span class="chk">&#10003;</span></td>
+                                <td><span class="dsh">&mdash;</span></td>
+                                <td><span class="dsh">&mdash;</span></td>
+                            </tr>
+                            <tr>
+                                <td>Viewer</td>
+                                <td><span class="dsh">&mdash;</span></td>
+                                <td><span class="dsh">&mdash;</span></td>
+                                <td><span class="dsh">&mdash;</span></td>
+                                <td><span class="dsh">&mdash;</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TECH STACK -->
+                <div class="ws">
+                    <div class="ws-title">Built with</div>
+                    <div class="chip-list">
+                        <span class="win-chip">Electron</span>
+                        <span class="win-chip">React 18</span>
+                        <span class="win-chip">TypeScript</span>
+                        <span class="win-chip">SQLite</span>
+                        <span class="win-chip">Supabase</span>
+                        <span class="win-chip">Tailwind CSS</span>
+                        <span class="win-chip">Zustand</span>
+                        <span class="win-chip">Recharts</span>
+                        <span class="win-chip">jsPDF</span>
+                        <span class="win-chip">jsBarcode</span>
+                        <span class="win-chip">electron-vite</span>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-    </main>
+    </div><!-- win-body -->
 
-    <footer>
-        <span>&copy; <span id="year"></span> Tej Narayan Chaudhary</span>
-        <a href="https://tejnc.github.io">&larr; Back to portfolio</a>
-    </footer>
+    <!-- STATUS BAR -->
+    <div class="statusbar">
+        <div class="sb-left">
+            <div class="sb-conn"><span class="sb-conn-dot"></span> Connected</div>
+            <span>v1.1.2</span>
+            <span>Offline-first &middot; SQLite + Supabase</span>
+        </div>
+        <a href="https://tejnc.github.io">&larr; tejnc.github.io</a>
+    </div>
 
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
-
+</div><!-- window -->
 </body>
-
 </html>
