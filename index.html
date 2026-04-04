@@ -5,33 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tej Narayan Chaudhary</title>
-    <meta name="description"
-        content="Data Engineer with 6 years of experience in backend and data systems. Building mobile apps with Flutter.">
+    <meta name="description" content="Senior Data Engineer & Backend Developer. 6+ yrs building pipelines, APIs, and privacy-first apps.">
     <meta property="og:title" content="Tej Narayan Chaudhary">
-    <meta property="og:description" content="Data Engineer · Flutter Developer · Indie Maker">
+    <meta property="og:description" content="Data Engineer · Backend Developer · Indie Maker">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tejnc.github.io">
     <link rel="canonical" href="https://tejnc.github.io">
     <meta name="google-site-verification" content="cYucUaFKh0ETR5FiRBsb-VJ-pBQm1HoLaiRThphrTPc" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --accent: #f5c6a0;
-            --bg: #0d0d0d;
-            --bg-card: #161616;
-            --border: #222;
-            --text: #e0e0e0;
-            --text-muted: #666;
-            --text-dim: #999;
+            --bg:      #0a0e1a;
+            --surface: #111827;
+            --panel:   #1a2035;
+            --border:  #2a3450;
+            --border2: #3d4e7a;
+            --accent:  #ff6b6b;
+            --yellow:  #feca57;
+            --green:   #48dbaa;
+            --blue:    #54a0ff;
+            --text:    #dfe6e9;
+            --muted:   #8892a4;
+            --dim:     #4a5568;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
@@ -39,268 +41,603 @@
             flex-direction: column;
         }
 
-        main {
-            flex: 1;
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 5rem 2rem 4rem;
-            width: 100%;
+        /* subtle scanline overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 3px,
+                rgba(0,0,0,0.04) 3px,
+                rgba(0,0,0,0.04) 4px
+            );
+            pointer-events: none;
+            z-index: 9999;
         }
 
-        /* ── HEADER ── */
-        .header {
-            margin-bottom: 3.5rem;
+        /* ── SCREEN ── */
+        .screen {
+            max-width: 760px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-left: 2px solid var(--border);
+            border-right: 2px solid var(--border);
         }
+
+        /* ── SCREEN HEADER (chrome) ── */
+        .screen-hdr {
+            background: var(--surface);
+            border-bottom: 2px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .screen-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .screen-title .hi { color: var(--accent); }
+
+        .px-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .px-dot {
+            width: 10px;
+            height: 10px;
+        }
+
+        .px-dot.r { background: var(--accent); }
+        .px-dot.y { background: var(--yellow); }
+        .px-dot.g { background: var(--green);  }
+
+        /* ── NAV TABS ── */
+        .nav {
+            background: var(--surface);
+            border-bottom: 2px solid var(--border);
+            padding: 0 1.5rem;
+            display: flex;
+            gap: 0;
+            flex-shrink: 0;
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            padding: 11px 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--muted);
+            cursor: pointer;
+            letter-spacing: 0.05em;
+            transition: color 0.1s;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            color: var(--text);
+            border-bottom-color: var(--border2);
+        }
+
+        .nav-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .nav-btn.apps-btn {
+            color: var(--blue);
+        }
+
+        .nav-btn.apps-btn:hover {
+            color: var(--yellow);
+            border-bottom-color: var(--yellow);
+        }
+
+        /* ── PAGE SECTIONS ── */
+        .page {
+            display: none;
+            flex: 1;
+            padding: 2.5rem 1.75rem 3rem;
+            animation: fadein 0.15s ease;
+        }
+
+        .page.active { display: block; }
+
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── HOME ── */
+        .prompt {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--green);
+            letter-spacing: 0.12em;
+            margin-bottom: 1.5rem;
+        }
+
+        .prompt::before { content: '> '; }
 
         .name {
-            font-size: clamp(2rem, 6vw, 3rem);
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            line-height: 1.1;
-            margin-bottom: 0.75rem;
-            color: #fff;
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(1rem, 3.5vw, 1.75rem);
+            line-height: 1.55;
+            margin-bottom: 0.4rem;
         }
 
-        .name span {
-            color: var(--accent);
+        .name .a { color: var(--accent); }
+
+        .cursor {
+            display: inline-block;
+            width: 0.7em;
+            height: 1.1em;
+            background: var(--accent);
+            vertical-align: text-bottom;
+            animation: blink 1s steps(1) infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
         }
 
         .tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            gap: 6px;
+            margin: 1.75rem 0;
         }
 
         .tag {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-dim);
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 0.3rem 0.75rem;
-            border-radius: 6px;
-            letter-spacing: 0.02em;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--yellow);
+            background: var(--panel);
+            border: 2px solid var(--border2);
+            padding: 5px 9px;
+            letter-spacing: 0.04em;
         }
 
         .bio {
-            font-size: 1rem;
-            color: var(--text-dim);
-            line-height: 1.75;
-            max-width: 520px;
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 2;
+            max-width: 500px;
+            padding-left: 1rem;
+            border-left: 3px solid var(--border2);
         }
 
-        /* ── SECTION ── */
-        .section-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 1rem;
+        .bio .hl { color: var(--text); }
+
+        /* ── SECTION HEADER ── */
+        .sect-hdr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--accent);
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
         }
 
-        /* ── PROJECT CARD ── */
-        .projects {
-            margin-bottom: 3.5rem;
-        }
+        .sect-hdr::before { content: '// '; color: var(--dim); }
 
-        .project-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.5rem;
-            text-decoration: none;
-            display: block;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        .project-card:hover {
-            border-color: rgba(245, 198, 160, 0.35);
-            transform: translateY(-2px);
-        }
-
-        .project-header {
+        /* ── EXPERIENCE ── */
+        .exp-list {
             display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            margin-bottom: 0.65rem;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .project-icon {
-            font-size: 1.6rem;
+        .exp-card {
+            background: var(--panel);
+            border: 2px solid var(--border);
+            padding: 1.25rem 1.4rem;
+        }
+
+        .exp-card.current { border-color: var(--green); }
+
+        .exp-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .exp-role {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--yellow);
+            line-height: 1.7;
+        }
+
+        .exp-badge {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px;
+            color: var(--bg);
+            background: var(--green);
+            padding: 5px 8px;
+            white-space: nowrap;
             flex-shrink: 0;
         }
 
-        .project-name {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--accent);
+        .exp-items {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
         }
 
-        .project-platform {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.1rem;
-        }
-
-        .project-desc {
-            font-size: 0.9rem;
-            color: var(--text-dim);
+        .exp-items li {
+            font-size: 0.81rem;
+            color: var(--muted);
             line-height: 1.65;
+            padding-left: 1.4rem;
+            position: relative;
+        }
+
+        .exp-items li::before {
+            content: '►';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 0.6rem;
+            top: 0.25rem;
+        }
+
+        .exp-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 0.9rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .stk {
+            font-size: 0.62rem;
+            color: var(--blue);
+            background: rgba(84,160,255,0.07);
+            border: 1px solid rgba(84,160,255,0.22);
+            padding: 2px 7px;
+        }
+
+        /* ── APPS ── */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .app-card {
+            background: var(--panel);
+            border: 2px solid var(--border);
+            padding: 1.35rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-card.feat  { border-color: var(--blue); }
+        .app-card:hover { border-color: var(--yellow); }
+
+        .app-top {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .app-ico { font-size: 2rem; }
+
+        .app-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .app-plat {
+            font-size: 0.68rem;
+            color: var(--dim);
+            margin-top: 0.3rem;
+        }
+
+        .app-desc {
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.75;
+            margin-bottom: 0.85rem;
+            flex: 1;
+        }
+
+        .app-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
             margin-bottom: 1rem;
         }
 
-        .project-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
+        .app-chip {
+            font-size: 0.6rem;
+            color: var(--dim);
+            border: 1px solid var(--border);
+            padding: 2px 6px;
         }
 
-        .chip {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            padding: 0.2rem 0.6rem;
-            border-radius: 5px;
+        .app-btn {
+            display: inline-block;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--bg);
+            background: var(--blue);
+            padding: 9px 13px;
+            text-decoration: none;
+            letter-spacing: 0.04em;
+            align-self: flex-start;
+            transition: background 0.1s;
         }
+
+        .app-btn:hover { background: var(--yellow); }
 
         /* ── LINKS ── */
-        .links {
-            margin-bottom: 3.5rem;
-        }
-
-        .link-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
+        .link-list { display: flex; flex-direction: column; }
 
         .link-item {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            color: var(--text-dim);
+            gap: 1rem;
+            color: var(--muted);
             text-decoration: none;
-            font-size: 0.9rem;
-            padding: 0.65rem 0;
+            font-size: 0.88rem;
+            padding: 1rem 0;
             border-bottom: 1px solid var(--border);
-            transition: color 0.2s;
+            transition: color 0.1s;
         }
 
-        .link-item:last-child {
-            border-bottom: none;
-        }
+        .link-item:first-child { border-top: 1px solid var(--border); }
+        .link-item:hover { color: var(--accent); }
+        .link-item:hover .larr { transform: translateX(5px); }
 
-        .link-item:hover {
-            color: var(--accent);
-        }
-
-        .link-icon {
-            font-size: 1rem;
-            width: 1.4rem;
+        .lico {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--blue);
+            width: 28px;
             text-align: center;
             flex-shrink: 0;
         }
 
-        .link-arrow {
-            margin-left: auto;
-            font-size: 0.85rem;
-            opacity: 0.4;
-        }
+        .larr { margin-left: auto; transition: transform 0.1s; }
 
         /* ── FOOTER ── */
         footer {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem 3rem;
-            width: 100%;
-            font-size: 0.78rem;
-            color: var(--text-muted);
+            background: var(--surface);
+            border-top: 2px solid var(--border);
+            padding: 0.8rem 1.5rem;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            flex-shrink: 0;
         }
 
-        @media (max-width: 480px) {
-            main {
-                padding: 3.5rem 1.25rem 3rem;
-            }
+        footer .hi { color: var(--accent); }
+
+        @media (max-width: 520px) {
+            .screen { border: none; }
+            .page   { padding: 2rem 1.1rem 3rem; }
+            .name   { font-size: 0.95rem; }
+            .app-grid { grid-template-columns: 1fr; }
+            .nav-btn  { font-size: 6px; padding: 10px 10px; }
         }
     </style>
 </head>
 
 <body>
+<div class="screen">
 
-    <main>
-
-        <!-- HEADER -->
-        <div class="header">
-            <h1 class="name">Tej Narayan<br><span>Chaudhary</span></h1>
-            <div class="tags">
-                <span class="tag">Data Engineer</span>
-                <span class="tag">Backend Engineering</span>
-                <span class="tag">DevOps</span>
-                <span class="tag">Flutter</span>
-                <span class="tag">Indie Maker</span>
-            </div>
-            <p class="bio">
-                6+ years building data pipelines, backend systems, and analytics infrastructure.
-                Currently exploring mobile development with Flutter — shipping apps that respect user privacy.
-            </p>
+    <!-- CHROME -->
+    <div class="screen-hdr">
+        <span class="screen-title"><span class="hi">TEJNC</span>.GITHUB.IO</span>
+        <div class="px-dots">
+            <div class="px-dot g"></div>
+            <div class="px-dot y"></div>
+            <div class="px-dot r"></div>
         </div>
+    </div>
 
-        <!-- PROJECTS -->
-        <div class="projects">
-            <div class="section-label">Projects</div>
-            <a href="https://tejnc.github.io/spendly" class="project-card" target="_blank" rel="noopener">
-                <div class="project-header">
-                    <span class="project-icon">💰</span>
+    <!-- NAV -->
+    <nav class="nav">
+        <button class="nav-btn active" data-page="home">HOME</button>
+        <button class="nav-btn" data-page="work">WORK</button>
+        <button class="nav-btn apps-btn" data-href="./invento/">APPS</button>
+        <button class="nav-btn" data-page="links">LINKS</button>
+    </nav>
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+        <div class="prompt">PLAYER ONE</div>
+        <h1 class="name">TEJ NARAYAN<br><span class="a">CHAUDHARY</span><span class="cursor"></span></h1>
+        <div class="tags">
+            <span class="tag">DATA ENGINEER</span>
+            <span class="tag">BACKEND DEV</span>
+            <span class="tag">DEVOPS</span>
+            <span class="tag">FLUTTER</span>
+            <span class="tag">INDIE MAKER</span>
+        </div>
+        <p class="bio">
+            <span class="hl">6+ years</span> building data pipelines, backend systems &amp; cloud infra.<br>
+            Shipping <span class="hl">Flutter apps</span> that respect user privacy.
+        </p>
+    </div>
+
+    <!-- WORK PAGE -->
+    <div class="page" id="page-work">
+        <div class="sect-hdr">EXPERIENCE</div>
+        <div class="exp-list">
+
+            <div class="exp-card current">
+                <div class="exp-head">
+                    <div class="exp-role">SENIOR DATA ENGINEER</div>
+                    <span class="exp-badge">CURRENT</span>
+                </div>
+                <ul class="exp-items">
+                    <li>Led global job data pipeline (GHR) &middot; AWS + Databricks Unity Catalog</li>
+                    <li>ETL/ELT with AWS Glue + Airflow &middot; reduced latency</li>
+                    <li>Vector DBs (Pinecone, FAISS) for RAG / AI chatbot search</li>
+                    <li>Data models in Redshift + PostgreSQL for AI retrieval</li>
+                    <li>Lambda microservices for real-time ingestion at scale</li>
+                    <li>Governance &amp; monitoring with Unity Catalog + CloudWatch</li>
+                    <li>REST APIs for processed datasets &middot; high availability</li>
+                    <li>LangChain + LangGraph workflow compatibility</li>
+                </ul>
+                <div class="exp-stack">
+                    <span class="stk">AWS</span><span class="stk">Databricks</span>
+                    <span class="stk">Airflow</span><span class="stk">AWS Glue</span>
+                    <span class="stk">Pinecone</span><span class="stk">FAISS</span>
+                    <span class="stk">Redshift</span><span class="stk">LangChain</span>
+                </div>
+            </div>
+
+            <div class="exp-card">
+                <div class="exp-head">
+                    <div class="exp-role">SENIOR BACKEND DEVELOPER</div>
+                </div>
+                <ul class="exp-items">
+                    <li>E-commerce APIs with Django + PostgreSQL/MySQL</li>
+                    <li>Automated testing with Pytest &middot; cut production issues</li>
+                    <li>CI/CD pipelines &middot; cross-team frontend collaboration</li>
+                </ul>
+                <div class="exp-stack">
+                    <span class="stk">Django</span><span class="stk">PostgreSQL</span>
+                    <span class="stk">MySQL</span><span class="stk">Pytest</span>
+                    <span class="stk">CI/CD</span>
+                </div>
+            </div>
+
+            <div class="exp-card">
+                <div class="exp-head">
+                    <div class="exp-role">BACKEND DEVELOPER</div>
+                </div>
+                <ul class="exp-items">
+                    <li>Serverless APIs (AWS Lambda + FastAPI) for a Demat system</li>
+                    <li>Payment gateways: Khalti + eSewa &middot; MongoDB backend</li>
+                    <li>Docker containerization for scalable deployments</li>
+                </ul>
+                <div class="exp-stack">
+                    <span class="stk">AWS Lambda</span><span class="stk">FastAPI</span>
+                    <span class="stk">MongoDB</span><span class="stk">Docker</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- APPS PAGE -->
+    <div class="page" id="page-apps">
+        <div class="sect-hdr">APPS</div>
+        <div class="app-grid">
+
+            <div class="app-card feat">
+                <div class="app-top">
+                    <span class="app-ico">&#128230;</span>
                     <div>
-                        <div class="project-name">Spendly</div>
-                        <div class="project-platform">Android · Google Play</div>
+                        <div class="app-name">INVENTO</div>
+                        <div class="app-plat">Desktop &middot; Electron &middot; Win / macOS</div>
                     </div>
                 </div>
-                <p class="project-desc">
-                    A privacy-first personal finance app. Track expenses with AI receipt scanning, manage
-                    multiple accounts, split bills, and plan budgets — all stored locally on your device.
-                </p>
-                <div class="project-chips">
-                    <span class="chip">Flutter</span>
-                    <span class="chip">Isar</span>
-                    <span class="chip">Riverpod</span>
-                    <span class="chip">ML Kit OCR</span>
-                    <span class="chip">Offline-first</span>
+                <p class="app-desc">Offline-first inventory management. Products, orders, warehouses &amp; cloud sync &mdash; works without internet.</p>
+                <div class="app-chips">
+                    <span class="app-chip">Electron</span>
+                    <span class="app-chip">React</span>
+                    <span class="app-chip">SQLite</span>
+                    <span class="app-chip">Supabase</span>
                 </div>
+                <a href="./invento/" class="app-btn">OPEN &#9654;</a>
+            </div>
+
+            <div class="app-card">
+                <div class="app-top">
+                    <span class="app-ico">&#128176;</span>
+                    <div>
+                        <div class="app-name">SPENDLY</div>
+                        <div class="app-plat">Android &middot; Google Play</div>
+                    </div>
+                </div>
+                <p class="app-desc">Privacy-first finance app. Track expenses, scan receipts with AI, split bills &mdash; all stored locally.</p>
+                <div class="app-chips">
+                    <span class="app-chip">Flutter</span>
+                    <span class="app-chip">Isar</span>
+                    <span class="app-chip">Riverpod</span>
+                    <span class="app-chip">ML Kit OCR</span>
+                </div>
+                <a href="https://tejnc.github.io/spendly" class="app-btn" target="_blank" rel="noopener">OPEN &#9654;</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LINKS PAGE -->
+    <div class="page" id="page-links">
+        <div class="sect-hdr">FIND ME</div>
+        <div class="link-list">
+            <a href="https://github.com/tejnc" class="link-item" target="_blank" rel="noopener">
+                <span class="lico">GH</span>
+                github.com/tejnc
+                <span class="larr">&#8599;</span>
+            </a>
+            <a href="https://play.google.com/store/apps/dev?id=com.tejnc" class="link-item" target="_blank" rel="noopener">
+                <span class="lico">&#9654;</span>
+                Google Play
+                <span class="larr">&#8599;</span>
             </a>
         </div>
+    </div>
 
-        <!-- LINKS -->
-        <div class="links">
-            <div class="section-label">Find me</div>
-            <div class="link-list">
-                <a href="https://github.com/tejnc" class="link-item" target="_blank" rel="noopener">
-                    <span class="link-icon">⌥</span>
-                    github.com/tejnc
-                    <span class="link-arrow">↗</span>
-                </a>
-                <a href="https://play.google.com/store/apps/dev?id=com.tejnc" class="link-item" target="_blank"
-                    rel="noopener">
-                    <span class="link-icon">▶</span>
-                    Google Play
-                    <span class="link-arrow">↗</span>
-                </a>
-            </div>
-        </div>
-
-    </main>
-
+    <!-- FOOTER -->
     <footer>
-        &copy; <span id="year"></span> Tej Narayan Chaudhary
+        <span><span class="hi">&copy;</span> <span id="yr"></span> TEJ NARAYAN CHAUDHARY</span>
+        <span>TEJNC.GITHUB.IO</span>
     </footer>
 
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
+</div>
+
+<script>
+    const btns = document.querySelectorAll('.nav-btn');
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const href = btn.dataset.href;
+            if (href) { window.location.href = href; return; }
+            btns.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('page-' + btn.dataset.page).classList.add('active');
+        });
+    });
+    document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
 
 </body>
-
 </html>
